@@ -43,7 +43,12 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-app.listen(port);
-
-
-export default app;
+export default {
+    start(){
+        return new Promise((resolve,reject)=>{
+            app.listen(port, () => {
+                resolve();
+            });
+        });
+    }
+}
