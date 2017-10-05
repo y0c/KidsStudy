@@ -1,60 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/dist/app.css'/>
+    <title>KidsStudyAdmin</title>
+    <link rel='stylesheet' href='/dist/admin.css' />
+    <script type="text/javascript" src="/dist/bundle.vendor.js"></script>
+    <script type="text/javascript" src="/dist/bundle.admin.js"></script>
 </head>
-<body ng-app="kidsStudy" ng-cloak>
 
-<section layout="row" flex>
+<body ng-app="kidsStudyAdmin" ng-cloak>
+    <div class="container">
 
-    <md-sidenav
-            class="md-sidenav-left"
-            md-component-id="left"
-            md-is-locked-open="$mdMedia('gt-sm')"
-            md-disable-backdrop
-            md-whiteframe="4"
-            >
+        <div class="lg-gap"></div>
+        <h1 class="page-header">
+            <i class="material-icons md-36">settings</i>
+            KidsStudy Admin
+        </h1>
+        <div class="md-gap"></div>
 
-        <md-toolbar class="md-theme-indigo">
-            <h1 class="md-toolbar-tools">KidsStudy Admin</h1>
-        </md-toolbar>
-        <md-list ng-controller="LeftCtrl as sidenav">
-            <md-item>
-                <a ui-sref="student" ui-sref-active="active" class="menu-link">
-                    <md-item-content layout="row" layout-align="start left" >
-                        <div class="inset">
-                            <i class="material-icons">face</i>
-                        </div>
-                        <div class="inset" >
-                            학생관리
-                        </div>
-                    </md-item-content>
-                </a>
-            </md-item>
-            <md-item>
-                <a ui-sref="paper" ui-sref-active="active" class="menu-link">
-                    <md-item-content layout="row" layout-align="start center">
-                        <div class="inset">
-                            <i class="material-icons">work</i>
-                        </div>
-                        <div class="inset">
-                            학습지관리
-                        </div>
-                    </md-item-content>
-                </a>
-            </md-item>
-            <md-divider></md-divider>
-        </md-list>
+        <section class="tab-heading">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link" ui-sref="student" ui-sref-active="active">
+                        <i class="material-icons">face</i><span>학생관리</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" ui-sref="paper" ui-sref-active="active">
+                        <i class="material-icons">work</i><span>학습지관리</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
 
-    </md-sidenav>
-    <md-content flex layout-padding ui-view>
+        <section class="tab-content" ui-view>
 
 
-    </md-content>
+        </section>
 
-</section>
+    </div>
 </body>
-<script type="text/javascript" src="/dist/bundle.vendor.js"></script>
-<script type="text/javascript" src="/dist/bundle.app.js"></script>
+
 </html>

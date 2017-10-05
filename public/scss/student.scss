@@ -1,0 +1,36 @@
+.login-card{
+    width: 600px;
+    margin: 150px auto;
+    padding: 20px;
+    box-shadow: 1px 1px 1px #333;
+    border-radius: 6px;
+    border: 1px solid #cccccc;
+}
+
+.logo{
+    text-align: center;
+    color: #ffb734 !important;
+}
+
+.question {
+    font-size: 25px;
+    padding: 20px 0;
+    color : #333;
+    .question-no{
+        min-width:50px;
+        display:inline-block;
+    }
+}
+.correct{
+    color:green !important;
+}
+
+.incorrect{
+    color:red !important;
+}
+.wrap{
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    box-shadow: 1px 1px 1px #4b4b4b;
+}

@@ -12,15 +12,15 @@ const url = require('url');
 let mainWindow;
 
 function createWindow () {
-    let app = require("./build/app");
 
-    app.default.start()
-        .then(()=>{
+    require("./build/app")
+        .default.start()
+        .then( () => {
             // Create the browser window.
-            mainWindow = new BrowserWindow({width: 800, height: 600});
+            mainWindow = new BrowserWindow({width: 1200, height: 800});
 
             // and load the index.html of the app.
-            mainWindow.loadURL("http://localhost:3000");
+            mainWindow.loadURL("http://localhost:3000/admin");
 
             // Open the DevTools.
             // mainWindow.webContents.openDevTools()
@@ -32,6 +32,8 @@ function createWindow () {
                 // when you should delete the corresponding element.
                 mainWindow = null
             });
+
+            mainWindow.setResizable(true);
         });
 
 }

@@ -1,0 +1,72 @@
+<script type="text/ng-template" id="mainTemplate">
+    <div class="lg-gap"></div>
+    <div class="wrap" ng-init="main.init();">
+        <h1 class="page-header logo">
+            <i class="material-icons md-36">face</i>
+            KidsStudy
+        </h1>
+        <p class="text-right">
+            <span class="help-block">
+                <i class="material-icons">account_circle</i><span ng-bind="main.username"></span>님 환영합니다 !
+            </span>
+        </p>
+        <div class="content" ui-view="content">
+
+        </div>
+    </div>
+
+
+</script>
+
+<script type="text/ng-template" id="mainContentTemplate">
+    <div class="alert alert-primary" role="alert">
+        아래 학습지 중 원하는 학습지를 풀어보세요
+    </div>
+    <div class="row">
+        <div class="col-md-3" ng-repeat="row in main.papers">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"><a ui-sref="main.paper({ paperid : row._id})">{{ row.title }}</a></h4>
+                    <h6 class="card-subtitle mb-2 text-muted">문제 미리보기</h6>
+                    <p class="card-text">
+                        <span ng-repeat="question in row.questions.slice(0,5) track by $index">{{$index + 1}}. <code>{{ question }}</code><br/></span>...</p>
+                    <span class="help-block">{{ row.createdAt | date:'yyyy.MM.dd' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="paperDetailTemplate">
+    <div class="content-wrap" ng-init="content.init();">
+        <h1 class="page-content-header">
+            <i class="material-icons">work</i>{{content.paper.title}}
+        </h1>
+        <div class="alert alert-info" role="alert">
+            문제를 다 푼 후에 아래 채점버튼을 누르면 점수를 확인해볼 수 있어요 !
+        </div>
+        <div class="row">
+            <div class="col-md-6" ng-repeat="question in content.paper.questions track by $index" >
+                <div class="question" ng-class="content.isCorrect(content.questionResult[$index])">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="question-no">{{$index+1}}. </span>
+                            <span class="question-text">{{question}}</span>
+                            <span class="equal">=</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="question{{$index+1}}" ng-model="content.questionResult[$index].answer" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lg-gap"></div>
+        <p class="text-right">
+            <button class="btn btn-info" ng-click="content.mark()"><i class="material-icons">done</i>채점하기</button>
+            <button class="btn btn-primary" ng-click="content.reset()"><i class="material-icons">autorenew</i>다시 풀기</button>
+            <a class="btn btn-warning" ui-sref="main.papers"><i class="material-icons">list</i>목록으로</a>
+        </p>
+        <div class="lg-gap"></div>
+    </div>
+</script>

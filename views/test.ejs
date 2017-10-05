@@ -1,0 +1,372 @@
+<html>
+    <head>
+        <title>Test</title>
+        <meta charset="utf-8" />
+
+        <script type="text/javascript">
+            var LEFT_BRAKET  = "(",
+                RIGHT_BRAKET = ")",
+                PLUS         = "+",
+                MINUS        = "-",
+                MULTIPLY     = "x",
+                DIVIDE       = "/";
+
+            var BLANK = ' ';
+
+            var PRIORITY_MAP = {
+                "(" : 10,
+                ")" : 10,
+                "+" : 1,
+                "-" : 1,
+                "x" : 5,
+                "/" : 5
+            };
+
+
+            function insertAt( str, idx, chr){
+                return str.slice(0,idx) + chr + str.slice(idx);
+            }
+
+            function deepTrim(str){
+                return str.replace(/\s/g,"");
+            }
+
+            function isOperator( chr ){
+                return chr == PLUS || chr == MINUS || chr == MULTIPLY || chr == DIVIDE;
+            }
+
+            function isOperatorOrBracket( chr ){
+                return isOperator(chr) || chr == LEFT_BRAKET || chr == RIGHT_BRAKET;
+            }
+
+            function isBracket( chr ){
+                return chr == RIGHT_BRAKET || chr == LEFT_BRAKET;
+            }
+
+            function setPriority( expr ){
+
+                var prevChr = '';
+                var nextChr = '';
+                expr = deepTrim(expr);
+
+                for( var i = 0 ; i < expr.length  ; i ++ ){
+                    var chr = expr.charAt(i);
+                    if( chr === MULTIPLY || chr === DIVIDE ){
+                        prevChr = expr.charAt(i-1);
+                        nextChr = expr.charAt(i+1);
+
+                        var matchChrIndex = -1;
+                        var temp = "";
+
+                        if( prevChr == RIGHT_BRAKET){
+                            matchChrIndex = expr.slice(0,i).lastIndexOf(LEFT_BRAKET);
+                        } else {
+                            for( var j = i - 1 ; j >= 0 ; j -- ){
+                                if( isOperator( expr.charAt(j) ) ){
+                                    matchChrIndex = j + 1;
+                                    break;
+                                }
+                            }
+                            if( matchChrIndex == -1 ) matchChrIndex = 0;
+                        }
+
+                        expr = insertAt( expr, matchChrIndex, LEFT_BRAKET);
+
+                        i++;
+
+                        matchChrIndex = -1;
+
+                        if( nextChr == LEFT_BRAKET ){
+                            matchChrIndex = expr.slice(0,i).length + expr.slice(i+1).lastIndexOf(RIGHT_BRAKET) + 1 ;
+                        } else {
+                            for( var k = i + 1 ; k < expr.length - 1 ; k ++ ){
+                                if( isOperator( expr.charAt(k) ) ){
+                                    matchChrIndex = k;
+                                    break;
+                                }
+                            }
+                            if( matchChrIndex == -1 ) matchChrIndex = expr.length;
+                        }
+
+                        expr = insertAt( expr, matchChrIndex, RIGHT_BRAKET);
+
+                        i++;
+                    }
+                }
+
+                return expr;
+            }
+
+            function infix2postfix( expr ){
+
+
+                var stack = [];
+
+                var postfix = "";
+                var chr     = '';
+
+                for( var i = 0 ; i < expr.length ; i ++ ){
+                    chr = expr.charAt(i);
+
+                    if( chr == LEFT_BRAKET ){
+                        stack.push( chr );
+                    } else if ( chr == RIGHT_BRAKET ){
+                        var _poped = null;
+                        while ( stack.length > 0 ){
+                            _poped = stack.pop();
+
+                            if( _poped == LEFT_BRAKET ){
+                                break;
+                            }
+                            postfix += _poped;
+                        }
+                    } else if( isOperator(chr) ){
+
+                        while( stack.length > 0 ){
+                            var lastElement = stack[ stack.length - 1 ];
+
+                            if( isOperator(lastElement) && PRIORITY_MAP[lastElement] >= PRIORITY_MAP[chr] ){
+                                postfix += stack.pop();
+                            } else {
+                                break;
+                            }
+                        }
+
+                        stack.push(chr);
+
+                    } else {
+                        var matchChrIndex = -1;
+                        for( var j = i + 1 ; j < expr.length - 1 ; j ++ ){
+                            if( isOperator(expr.charAt(j)) || isBracket(expr.charAt(j)) ){
+                                matchChrIndex = j;
+                                break;
+                            }
+                        }
+                        
+                        if( matchChrIndex == -1 ){
+                            matchChrIndex = expr.length;
+                            if( isBracket(expr.charAt(expr.length) ) ){
+                                matchChrIndex -= 1;
+                            }
+                        }
+                        
+                         
+
+                        postfix += expr.slice(i,matchChrIndex) + ' ';
+                        i += (matchChrIndex - i - 1);
+                    }
+                }
+
+                while ( stack.length > 0 ){
+                    postfix += stack.pop();
+                }
+
+
+                return postfix;
+
+            }
+
+            function calculatePostfix( expr ){
+                
+                var stack = [];
+                
+                var operator = null,
+                    operand1 = null,
+                    operand2 = null;
+                
+                for( var i = 0 ; i < expr.length ; i ++ ){
+                    
+                    if( isOperator(expr.charAt(i)) ){
+
+                        operator = expr.charAt(i);
+                        operand2 = stack.pop() + '';
+                        operand1 = stack.pop() + '';
+
+                        operator = operator.replace(/x/g,"*");
+
+                        stack.push( eval( operand1 + operator + operand2 ) );
+
+                    } else if( expr.charAt(i) != BLANK){
+                        //공백이 나올때까지 Stack에 쌓음 
+                        var matchChrIndex = -1;
+                        for( var j = i + 1 ; j < expr.length ; j ++ ){
+                            if( expr.charAt(j) == BLANK ){
+                                matchChrIndex = j;
+                                break;
+                            }
+
+                            if( matchChrIndex == -1 ){
+                                matchChrIndex = expr.length;
+                            }
+                        }    
+
+                        stack.push( expr.slice( i, matchChrIndex ) );
+
+                        i += (matchChrIndex - i - 1);
+                    }
+                }
+
+                return stack.pop();
+            }
+
+            function getStepArrayPostfix( expr ){
+                
+                var stack = [];
+                
+                var operator = null,
+                    operand1 = null,
+                    operand2 = null;
+
+                var stepArray = [];
+                
+                for( var i = 0 ; i < expr.length ; i ++ ){
+                    
+                    if( isOperator(expr.charAt(i)) ){
+
+                        operator = expr.charAt(i);
+                        operand2 = stack.pop() + '';
+                        operand1 = stack.pop() + '';
+
+                        operator = operator.replace(/x/g,"*");
+
+                        stepArray.push({
+                            op1 : operand1,
+                            op2 : operand2,
+                            operator : operator
+                        });
+
+                        stack.push( eval( operand1 + operator + operand2 ) );
+
+                    } else if( expr.charAt(i) != BLANK){
+                        //공백이 나올때까지 Stack에 쌓음 
+                        var matchChrIndex = -1;
+                        for( var j = i + 1 ; j < expr.length ; j ++ ){
+                            if( expr.charAt(j) == BLANK ){
+                                matchChrIndex = j;
+                                break;
+                            }
+
+                            if( matchChrIndex == -1 ){
+                                matchChrIndex = expr.length;
+                            }
+                        }    
+
+                        stack.push( expr.slice( i, matchChrIndex ) );
+
+                        i += (matchChrIndex - i - 1);
+                    }
+                }
+
+                return stepArray;
+            }
+
+            function getTotalStepPostfix( expr ){
+                var stepCnt = 0;
+
+                for( var i = 0 ; i < expr.length ; i ++ ){
+                    if( isOperator(expr.charAt(i)) ){
+                        stepCnt ++;
+                    }
+                }
+
+                return stepCnt;
+            }
+
+            console.log(insertAt("eerererererer",3,"s"));
+            // console.log(deepTrim());
+
+            console.log(setPriority("4+6x2/3+4x2"));
+            console.log(setPriority("4x2+4x9"));
+            console.log(setPriority("9+4x3+4+2+4x3+4+4/4"));
+            console.log(setPriority("9444x455+(34x34)/49x854"));
+            console.log(setPriority("3434/ 323x444/4444+343434x4344+222"));
+
+            console.log(infix2postfix(deepTrim("4+6x2/3+4x2")));
+            console.log(infix2postfix(deepTrim("4x2+4x9")));
+            console.log(infix2postfix(deepTrim("9+4x3+4+2+4x3+4+4/4")));
+            console.log(infix2postfix(deepTrim("9444x455+(34x34)/49x854")));
+            console.log(infix2postfix(deepTrim("3434/ 323x444/4444+343434x4344+222")));
+            console.log(calculatePostfix(infix2postfix(deepTrim("3434/ 323x444/4444+343434x4344+222"))));
+            console.log(calculatePostfix(infix2postfix(deepTrim("9444x455+(34x34)/49x854"))));
+            console.log(calculatePostfix(infix2postfix(deepTrim("9+4x3+4+2+4x3+4+4/4"))));
+            console.log(eval(deepTrim("3434/ 323x444/4444+343434x4344+222").replace(/x/g,"*")));
+            console.log(eval(deepTrim("9444x455+(34x34)/49x854").replace(/x/g,"*")));
+            console.log(eval(deepTrim("9+4x3+4+2+4x3+4+4/4").replace(/x/g,"*")));
+
+            console.table(getStepArrayPostfix(infix2postfix(deepTrim("3434/ 323x444/4444+343434x4344+222"))));
+            // console.log(infix2postfix(deepTrim("1 + 2 x 3 + ( 4 x 5 + 6 )")));
+            function drawMultiplySymbol( ctx, x, y, size ){
+                ctx.beginPath();
+                ctx.moveTo( x, y );
+                ctx.lineTo( x + size, y + size );
+                ctx.moveTo( x + size, y );
+                ctx.lineTo( x, y + size );
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            function drawMultiplyExpression( ctx, x, y, op1, op2 ){
+                var NUMBER_SIZE = 20;
+                var SYMBOL_SIZE = 15;
+                var SYMBOL_GAP  = 10;
+
+                //fillText 는 y시작위치가 다르므로 조정 
+                x = ( op2.length + 1 ) * NUMBER_SIZE;
+                var startY = y < NUMBER_SIZE ? NUMBER_SIZE : y;
+                ctx.font = "20px helvetica";
+
+                drawMultiplySymbol( ctx, x, y + (NUMBER_SIZE) - SYMBOL_SIZE, SYMBOL_SIZE );
+                for( var i = 0 ; i < op1.length ; i ++ ){
+                    ctx.fillText( op1.charAt(i), ( x + SYMBOL_SIZE + SYMBOL_GAP ) + ( i * NUMBER_SIZE ), startY );
+                }
+
+                for( var i = 0 ; i < op2.length ; i ++ ){
+                    ctx.fillText( op2.charAt(i), ( x + SYMBOL_SIZE + SYMBOL_GAP ) + ( i * NUMBER_SIZE ), y + NUMBER_SIZE );
+                }
+
+                var maxCnt = Math.max( op1.length , op2.length );
+                var lineY  = (y + NUMBER_SIZE) + 5;
+
+                ctx.beginPath();
+                ctx.lineWidth = 1;
+                ctx.moveTo( x, y + (NUMBER_SIZE) + 5 );
+                ctx.lineTo( ( x + SYMBOL_SIZE + SYMBOL_GAP ) + ( maxCnt * NUMBER_SIZE ), lineY );
+                ctx.closePath();
+                ctx.stroke();
+
+                for( var i = 0 ; i < op2.length ; i ++ ){
+                    ctx.strokeRect( x - ( NUMBER_SIZE * i ) , ( lineY + 5 ) + ( (NUMBER_SIZE+5) * i ), ( op1.length + 1 ) * NUMBER_SIZE, NUMBER_SIZE );
+                }
+
+                ctx.beginPath();
+                ctx.moveTo( x - ( NUMBER_SIZE * op2.length ), ( lineY + 5 ) + ( (NUMBER_SIZE+5) * op2.length ) + 5 );
+                ctx.lineTo( ( x + SYMBOL_SIZE + SYMBOL_GAP ) + ( maxCnt * NUMBER_SIZE ) , ( lineY + 5 ) + ( (NUMBER_SIZE+5) * op2.length ) + 5 );
+                ctx.closePath();
+                ctx.stroke();
+
+                ctx.strokeRect( 
+                    x - ( NUMBER_SIZE * op2.length ),
+                    ( lineY + 5 ) + ( (NUMBER_SIZE+5) * op2.length ) + 10,
+                    ( op1.length + op2.length + 1 ) * NUMBER_SIZE,
+                     NUMBER_SIZE 
+                );
+                
+            }
+
+
+            window.onload = function(){
+                var canvas = document.getElementById("calcCanvas");
+                var ctx    = canvas.getContext("2d");
+                drawMultiplyExpression(ctx, 20,20,"8888","6644");
+
+                
+            }
+        </script>
+    </head>
+    <body>
+
+        <canvas id="calcCanvas" height="500" width="500">
+
+        </canvas>
+    </body>
+</html>

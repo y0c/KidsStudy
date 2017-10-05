@@ -1,10 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<script type="text/ng-template" id="studentMain">
+    <h2 class="page-sub-header"><i class="material-icons">list</i>등록된 학생 목록</h2>
+    <!-- exact table from live demo -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th><span>학생 아이디</span></th>
+                <th>학생이름</th>
+                <th>생성일</th>
+                <th>비고</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in student.students" ng-click="student.select(row);" ng-class="student.selectedStudent.userid == row.userid ? 'selected' : ''">
+                <td>{{row.userid}}</td>
+                <td>{{row.username}}</td>
+                <td>{{row.createdAt | date:'yyyy.MM.dd'}}</td>
+                <td>{{row.etc}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="lg-gap"></div>
+
+    <h2 class="page-sub-header"><i class="material-icons">save</i>학생등록</h2>
+    <form name="studentForm">
+        <div class="form-group row">
+            <label for="userid" class="col-sm-2 col-form-label">학생아이디</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="userid" placeholder="등록할 아이디를 입력해주세요" ng-model="student.form.userid" required
+                        ng-disabled="student.selectedStudent != null">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="username" class="col-sm-2 col-form-label">학생이름</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="username" placeholder="등록할 학생이름을 입력해주세요" ng-model="student.form.username" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="password" class="col-sm-2 col-form-label">비밀번호</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" name="password" placeholder="비밀번호를 입력해주세요" ng-model="student.form.password" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="passwordConfirm" class="col-sm-2 col-form-label">비밀번호확인</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" name="passwordConfirm" placeholder="비밀번호를 한번 더 입력해주세요" ng-model="student.form.passwordConfirm" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="etc" class="col-sm-2 col-form-label">비고</label>
+            <div class="col-sm-10">
+                <textarea name="name" class="form-control" name="etc" ng-model="student.form.etc"></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <p class="text-right">
+                    <button ng-click="student.submit();" class="btn btn-primary" ng-show="student.selectedStudent == null">저장하기</button>
+                    <button ng-click="student.reset();" class="btn btn-primary" ng-show="student.selectedStudent != null">등록하기</button>
+                    <button ng-click="student.modify();" class="btn btn-success" ng-show="student.selectedStudent != null">수정하기</button>
+                    <button ng-click="student.delete();" class="btn btn-danger" ng-show="student.selectedStudent != null">삭제하기</button>
+                </p>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script type="text/ng-template" id="paperMain">
+    <h2 class="page-sub-header"><i class="material-icons">list</i>등록된 학습지 목록</h2>
+
+    <!-- exact table from live demo -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th><span>학습지 제목</span></th>
+                <th>생성일</th>
+                <th>비고</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in paper.papers" ng-click="paper.select(row);" ng-class="paper.selectedPaper._id == row._id ? 'selected' : ''">
+                <td>{{row.title}}</td>
+                <td>{{row.createdAt | date:'yyyy.MM.dd'}}</td>
+                <td>{{row.etc}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="lg-gap"></div>
+
+    <h2 class="page-sub-header"><i class="material-icons">save</i>학습지등록</h2>
+    <form name="paperForm">
+        <div class="form-group row">
+            <label for="title" class="col-sm-2 col-form-label">학습지제목</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="title" placeholder="학습지 제목을 입력해주세요" ng-model="paper.form.title" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="question" class="col-sm-2 col-form-label">문제</label>
+            <div class="col-sm-10">
+                <textarea name="name" class="form-control" name="question" ng-model="paper.form.question" required style="min-height:300px;"></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="etc" class="col-sm-2 col-form-label">비고</label>
+            <div class="col-sm-10">
+                <textarea name="name" class="form-control" name="etc" ng-model="paper.form.etc"></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <p class="text-right">
+                    <button ng-click="paper.submit();" class="btn btn-primary" ng-show="paper.selectedPaper == null">저장하기</button>
+                    <button ng-click="paper.reset();" class="btn btn-primary" ng-show="paper.selectedPaper != null">등록하기</button>
+                    <button ng-click="paper.modify();" class="btn btn-success" ng-show="paper.selectedPaper != null">수정하기</button>
+                    <button ng-click="paper.delete();" class="btn btn-danger" ng-show="paper.selectedPaper != null">삭제하기</button>
+                </p>
+            </div>
+        </div>
+    </form>
+</script>

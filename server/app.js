@@ -1,11 +1,16 @@
 import express from "express";
-import path    from "path";
+import path from "path";
 import favicon from "serve-favicon";
-import logger  from 'morgan';
+import logger from 'morgan';
 import cookieParser from 'cookie-parser';
-import bodyParser   from 'body-parser';
-import index from './routes/index';
-import users from './routes/users';
+import bodyParser from 'body-parser';
+import adminIndex from './routes/admin/index';
+import adminStudent from './routes/admin/student';
+import adminPaper from './routes/admin/paper';
+import studentIndex from './routes/student/index';
+import session from 'express-session';
+
+import db from "./db";
 
 const app = express();
 
@@ -18,34 +23,50 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use(session({
+    secret: '@#@$SECRET_KEY#@$#$',
+    resave: false,
+    saveUninitialized: true
+}));
+
+function isAuthendicated( req, res, next ){
+    if( !req.session.userid ){
+        res.redirect("/");
+    }
+}
+
+app.use('/', studentIndex(db) );
+app.use('/admin', adminIndex);
+app.use('/student', adminStudent(db));
+app.use('/paper', adminPaper(db));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handler
 app.use((err, req, res, next) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 export default {
-    start(){
-        return new Promise((resolve,reject)=>{
+    start() {
+        return new Promise((resolve, reject) => {
             app.listen(port, () => {
                 resolve();
             });
