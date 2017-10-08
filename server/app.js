@@ -1,3 +1,6 @@
+//argument 가 없다면 default로 development 환경으로 설정
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+
 import express from "express";
 import path from "path";
 import favicon from "serve-favicon";

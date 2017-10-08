@@ -35,7 +35,7 @@ app.config(
 });
 
 
-app.service("StudentService", StudentService);
-app.controller("StudentController", StudentController);
-app.service("PaperService", PaperService);
-app.controller("PaperController", PaperController);
+app.service("StudentService", StudentService)
+    .controller("StudentController", StudentController)
+    .service("PaperService", PaperService)
+    .controller("PaperController", PaperController);

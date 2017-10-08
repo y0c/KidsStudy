@@ -5,6 +5,7 @@ export default class StudentMainController{
         this.$scope = $scope;
         this.PaperService = PaperService;
         this.$rootScope   = $rootScope;
+        
     }
 
     init(){
