@@ -97,4 +97,20 @@ describe( "PaperGroup Model Test", () => {
         });
     });
 
+
+    it("#FindOrCreate PaperGroup", done => {
+        db.PaperGroup.findOrCreate({
+            where : {
+                groupId : "B"
+            },
+            defaults : {
+                groupId : "A",
+                groupTitle : "덧셈"
+            }
+        }).spread( ( user, created ) => {
+            
+            assert.isFalse(created);
+            done();
+        }); 
+    });
 })
