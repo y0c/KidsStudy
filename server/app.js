@@ -8,9 +8,10 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import adminIndex from './routes/admin/index';
-import adminStudent from './routes/admin/student';
-import adminPaper from './routes/admin/paper';
 import studentIndex from './routes/student/index';
+import paperGroupRouter from "./routes/admin/paperGroupRouter";
+import paperRouter from "./routes/admin/paperRouter";
+import studentRouter from "./routes/admin/studentRouter"
 import session from 'express-session';
 
 import db from "./db";
@@ -44,10 +45,11 @@ function isAuthendicated( req, res, next ){
     }
 }
 
-app.use('/', studentIndex(db) );
-app.use('/admin', adminIndex);
-app.use('/student', adminStudent(db));
-app.use('/paper', adminPaper(db));
+// app.use('/', studentIndex(db) );
+// app.use('/admin', adminIndex);
+app.use('/admin/paperGroup', paperGroupRouter );
+app.use('/admin/paper' , paperRouter );
+app.use('/admin/student', studentRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -68,6 +70,7 @@ app.use((err, req, res, next) => {
 });
 
 export default {
+    instance : app,
     start() {
         return new Promise((resolve, reject) => {
             app.listen(port, () => {

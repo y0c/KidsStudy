@@ -8,7 +8,7 @@ export default {
         //Sequelize 옵션 
         opts : {
             dialect: "sqlite",
-            storage: '../../test1.sqlite',
+            storage: "test2.sqlite"
         }
     }
     
