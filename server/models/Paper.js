@@ -72,7 +72,7 @@ export default ( sequelize, DataTypes ) => {
                 allowNull : false,
                 unique : false
             },
-            foreignKey: "paperId"
+            foreignKey : "paperId"
         });
 
         Paper.hasMany( db.PaperQuestion, {

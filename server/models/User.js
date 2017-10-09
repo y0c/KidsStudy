@@ -55,8 +55,12 @@ export default ( sequelize, DataTypes ) => {
      */
     User.associate = ( db ) => {
         User.belongsToMany( db.Paper, {
-            through: "UserPaperLog",
-              foreignKey: "userId"
+            through: {
+                model : db.UserPaperLog,
+                allowNull : false,
+                unique : false
+            },
+            foreignKey : "userId"
         });
     };
 
