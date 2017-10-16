@@ -37,17 +37,28 @@ export default ( sequelize, DataTypes ) => {
         role : {
             type : DataTypes.ENUM,
             values : [ "admin", "student", "teacher" ],
-            field : "role"
+            field : "role",
+            defaultValue : "student"
         },
         etc  :{
             type : DataTypes.STRING(2000),
             allowNull : true,
             field : "etc"
+        },
+        createdAt : {
+            type : DataTypes.DATE,
+            field : "created_at"
+        },
+        updatedAt : {
+            type : DataTypes.DATE,
+            field : "updated_at"
         }
     },{
         tableName : "USER",
         freezeTableName: true,
-        underscored : true
+        underscored : true,
+        updatedAt: "updatedAt",
+        createdAt: "createdAt"
     });
 
     /**
