@@ -7,14 +7,15 @@ import favicon from "serve-favicon";
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import adminIndex from './routes/admin/index';
-import studentIndex from './routes/student/index';
 import paperGroupRouter from "./routes/admin/paperGroupRouter";
 import paperRouter from "./routes/admin/paperRouter";
 import studentRouter from "./routes/admin/studentRouter"
+import authRouter from "./routes/authRouter";
+import indexRouter from "./routes/indexRouter";
 import session from 'express-session';
 
-import db from "./db";
+import db from "./models/index";
+// import db from "./db";
 
 const app = express();
 
@@ -46,7 +47,8 @@ function isAuthendicated( req, res, next ){
 }
 
 // app.use('/', studentIndex(db) );
-// app.use('/admin', adminIndex);
+app.use("/auth", authRouter);
+app.use('/', indexRouter);
 app.use('/admin/paperGroup', paperGroupRouter );
 app.use('/admin/paper' , paperRouter );
 app.use('/admin/student', studentRouter);
@@ -73,9 +75,12 @@ export default {
     instance : app,
     start() {
         return new Promise((resolve, reject) => {
-            app.listen(port, () => {
-                resolve();
-            });
+            db.sequelize.sync()
+                .then( () => {
+                    app.listen(port, () => {
+                        resolve();
+                    });
+                })
         });
     }
 }

@@ -4,11 +4,11 @@ export default {
         host : null,
         username : null,
         password : null,
-        database : "kidsStudy",
+        database : "KidsStudy",
         //Sequelize 옵션 
         opts : {
             dialect: "sqlite",
-            storage: '../../db.sqlite',
+            storage: "dev.db"
         }
     }
     
