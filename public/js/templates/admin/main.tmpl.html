@@ -1,0 +1,182 @@
+<script type="text/ng-template" id="mainTemplate">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+            <a class="navbar-brand" href="index.html">KidsStudyAdmin</a>
+            <button class="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+            <div class="navbar-collapse collapse" id="navbarResponsive" style="">
+                <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dashboard">
+                        <a class="nav-link" ui-sref="admin.student" ui-sref-active="active">
+                            <i class="fa fa-fw fa-dashboard"></i>
+                            <span class="nav-link-text">학생관리</span>
+                            </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="" data-original-title="Charts">
+                        <a class="nav-link" ui-sref="admin.paper" ui-sref-active="active">
+                            <i class="fa fa-fw fa-area-chart"></i>
+                            <span class="nav-link-text">학습지관리</span>
+                            </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav sidenav-toggler">
+                    <li class="nav-item">
+                        <a class="nav-link text-center" id="sidenavToggler">
+                            <i class="fa fa-fw fa-angle-left"></i>
+                            </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                            <i class="fa fa-fw fa-sign-out"></i>Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="container-fluid"  ui-view="content">
+
+            </div>
+        </div>
+</script>
+
+
+<script type="text/ng-template" id="studentAdminTemplate">
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fa fa-user"></i>
+                <span>학생관리</span>
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="search-box">
+                <div class="input-group col-md-12">
+                    <input type="text" class="form-control input-lg" placeholder="찾고싶은 학생을 검색해보세요" ng-model="content.searchQuery" ng-enter="content.filter()"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="button" ng-click="content.filter()">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="md-gap"></div>
+            <div class="grid" ui-grid="content.gridOptions" ui-grid-selection></div>
+            <div class="md-gap"></div>        
+        </div>
+    </div>
+    <div class="md-gap"></div>
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fa fa-save"></i>
+                <span>학생등록</span>
+            </h2>
+        </div>
+        <div class="card-body">
+                <form name="studentForm">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label for="userid">학생아이디</label>
+                            <input type="text" class="form-control" name="userid" placeholder="등록할 아이디를 입력해주세요" ng-model="content.form.userId" required
+                                    ng-disabled="content.selectedStudent != null">
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="username">학생이름</label>
+                            <input type="text" class="form-control" name="username" placeholder="등록할 학생이름을 입력해주세요" ng-model="content.form.userName" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="grade">학년</label>
+                            <input type="text" class="form-control" name="grade" placeholder="학년을 입력해주세요" ng-model="content.form.grade" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="password">비밀번호</label>
+                            <input type="password" class="form-control" name="password" placeholder="비밀번호를 입력해주세요" ng-model="content.form.password" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password">비밀번호 확인</label>
+                            <input type="password" class="form-control" name="passwordConfirm" placeholder="비밀번호를 한번 더 입력해주세요" ng-model="content.form.passwordConfirm" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label for="etc">비고</label>
+                            <textarea name="etc" class="form-control" name="etc" ng-model="content.form.etc" placeholder="비고를 입력해주세요"></textarea>
+                        </div>
+                    </div>
+                    
+                </form>
+        </div>
+        <div class="card-footer">
+            <p class="text-right">
+                <button ng-click="content.submit();" class="btn btn-primary" ng-show="content.selectedStudent == null">저장하기</button>
+                <button ng-click="content.reset();" class="btn btn-primary" ng-show="content.selectedStudent != null">등록하기</button>
+                <button ng-click="content.modify();" class="btn btn-success" ng-show="content.selectedStudent != null">수정하기</button>
+                <button ng-click="content.delete();" class="btn btn-danger" ng-show="content.selectedStudent != null">삭제하기</button>
+            </p>
+        </div>
+    </div>
+
+    <div class="lg-gap"></div>
+</script>
+
+<script type="text/ng-template" id="paperAdminTemplate">
+<div class="card">
+    <div class="card-header">
+        <h2>
+            <i class="fa fa-briefcase"></i>
+            <span>학습지 그룹</span>
+        </h2>
+    </div>
+    <div class="card-body">
+        <div class="search-box">
+            <div class="input-group col-md-12">
+                <input type="text" class="form-control input-lg" placeholder="학습지 그룹을 검색해보세요" ng-model="content.searchQuery" ng-enter="content.filter()"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-info btn-lg" type="button" ng-click="content.filter()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="md-gap"></div>
+        <div class="grid" ui-grid="content.gridOptions" ui-grid-selection></div>
+        <div class="md-gap"></div> 
+    </div>
+</div>
+<div class="md-gap"></div>
+<div class="card">
+    <div class="card-header">
+        <h2>
+            <i class="fa fa-briefcase"></i>
+            <span>학습지 그룹 등록</span>
+        </h2>
+    </div>
+    <div class="card-body">
+        <form name="paperGroupForm" novalidate>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label for="gruopId">그룹명</label>
+                    <input type="groupId" class="form-control" name="groupId" placeholder="그룹명을 입력해주세요" ng-model="content.form.groupId" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="groupTitle">그룹타이틀</label>
+                    <input type="groupTitle" class="form-control" name="groupTitle" placeholder="그룹타이틀을 한번 더 입력해주세요" ng-model="content.form.groupTitle" required>
+                </div>
+            </div>
+        </form>  
+    </div>
+    <div class="card-footer">
+        <p class="text-right">
+            <button ng-click="content.submit();" class="btn btn-primary" ng-show="content.selectedPaperGroup == null">저장하기</button>
+            <button ng-click="content.reset();" class="btn btn-primary" ng-show="content.selectedPaperGroup != null">등록하기</button>
+            <button ng-click="content.modify();" class="btn btn-success" ng-show="content.selectedPaperGroup != null">수정하기</button>
+            <button ng-click="content.delete();" class="btn btn-danger" ng-show="content.selectedPaperGroup != null">삭제하기</button>
+        </p>
+    </div>
+</div>
+
+</script>
