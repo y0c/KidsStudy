@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
+    "web": "NODE_ENV=development node build/web",
     "start": "NODE_ENV=development electron main.js",
     "serverbuild": "babel --watch server --out-dir=build",
     "clientbuild": "webpack --watch",
-    "test" : "NODE_ENV=test node ./node_modules/mocha/bin/mocha ./build/test/**/*.spec.js"
+    "test": "NODE_ENV=test node ./node_modules/mocha/bin/mocha ./build/test/**/*.spec.js"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.7",
@@ -16,6 +18,7 @@
     "angular-messages": "^1.6.6",
     "angular-route": "^1.6.6",
     "angular-ui-bootstrap": "^2.5.0",
+    "angular-ui-grid": "^4.0.7",
     "angular-ui-router": "^1.0.3",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
@@ -29,6 +32,7 @@
     "nedb": "^1.8.0",
     "sequelize": "^4.13.5",
     "serve-favicon": "~2.4.2",
+    "sqlite": "^2.8.0",
     "sqlite3": "^3.1.13"
   },
   "devDependencies": {
@@ -39,6 +43,7 @@
     "chai": "^4.1.2",
     "css-loader": "^0.28.7",
     "electron": "1.7.8",
+    "electron-builder": "^19.37.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
     "mocha": "^4.0.1",
