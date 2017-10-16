@@ -1,0 +1,23 @@
+@import "sbadmin/sb-admin.scss";
+
+.card-backdrop{
+    background-color: #333;
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+}
+
+.card-login{
+    position: relative;
+    z-index: 100;
+}
+
+.nav-link.active{
+    background : #333;
+}
+
+.content-wrapper{
+    padding-top:70px;
+}
