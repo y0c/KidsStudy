@@ -1,16 +1,22 @@
-class focus {
+class NgEnter{
 
     constructor(){
-        this.restrict = 'A';
+        this.restrict = "A";
     }
-    /** @ngInject */
-    link( scope, eleme, attrs){
-        scope.$on('focusOn', function(e, name) {
-            if(name === attr.focusOn) {
-              elem[0].focus();
+
+    link( scope, element, attrs ){
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+ 
+                event.preventDefault();
             }
         });
     }
 }
 
-export { focus as default }
+export default ( app ) => {
+    app.directive("ngEnter" , () => new NgEnter );
+};
