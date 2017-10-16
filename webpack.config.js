@@ -12,9 +12,9 @@ const extractSass = new ExtractTextPlugin({
 
 module.exports = {
     entry: {
-        admin :  './public/js/admin.js',
+        app :  './public/js/app.js',
         student : "./public/js/student.js",
-        vendor : [ 'angular', 'angular-ui-router', 'angular-ui-bootstrap', "lodash"]
+        vendor : [ 'angular', 'angular-ui-router', 'angular-ui-bootstrap', "angular-ui-grid",  "lodash"]
     },
     output: {
         path: __dirname + "/public/dist",
