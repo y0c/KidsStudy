@@ -9,10 +9,15 @@ export default class LoginController{
     }
 
     login(){
-        this.AuthService.login(this.form)
+        this.AuthService.login(this.formData)
             .then((user) => {
                 this.$rootScope.loginInfo = user;
-                this.$state.go("main.papers");
+                let stateMap = {
+                    admin : "admin.student",
+                    student : "student.main"
+                };
+                
+                this.$state.go(stateMap[user.role]);
             });
     }
 
