@@ -1,17 +1,52 @@
 export default class StudentController{
     /** @ngInject */
-    constructor($scope, StudentService){
+    constructor($scope, StudentService, $filter){
         this.$scope         = $scope;
         this.StudentService = StudentService;
+        this.$filter        = $filter;
         this.selectStudent  = null;
+        this.searchQuery    = "";
+        this.setGridOptions();
+        // this.gridApi.grid.refresh();
         this.init();
+        console.log(this.gridApi);
     }
+
+    setGridOptions(){
+        let vm = this;
+        this.gridOptions = {
+            enableSorting : true,
+            enableRowSelection: true,
+            enableRowHeaderSelection: false,
+            columnDefs : [
+                { name : "학생아이디", field : "userId" },
+                { name : "학생이름", field : "userName"},
+                { name : "학년", field : "grade"},
+                { name : "생성일", field : "createdAt", cellFilter : "date:'yyyy-MM-dd'"},
+                { name : "수정일", field : "updatedAt", cellFilter : "date:'yyyy-MM-dd'"}
+            ],
+            noUnselect : true,
+            multiSelect : false,
+            appScopeProvider : this,
+            onRegisterApi : gridApi => {
+                this.gridApi = gridApi;
+                this.gridApi.selection.on.rowSelectionChanged(vm.$scope,function(row){
+                    this.grid.appScope.select(row.entity);                     
+                });
+            }
+        };
+    }
+
+    filter(){
+        this.gridOptions.data = this.$filter('filter')( this.students, this.searchQuery);
+    }
+
 
     init(){
         this.StudentService.selectStudentList({})
             .then(( result ) => {
-                this.students = result.docs;
-                console.log(result);
+                this.students = result.studentList;
+                this.gridOptions.data = result.studentList;
             });
     }
 
@@ -22,10 +57,11 @@ export default class StudentController{
 
     validate(){
         let messageMap = {
-            "userid" : "학생아이디를 입력해주세요",
-            "username" : "학생이름을 입력해주세요",
+            "userId" : "학생아이디를 입력해주세요",
+            "userName" : "학생이름을 입력해주세요",
             "password" : "비밀번호를 입력해주세요",
-            "passwordConfirm" :  "비밀번호 확인을 입력해주세요"
+            "passwordConfirm" :  "비밀번호 확인을 입력해주세요",
+            "grade" : "학년을 입력해주세요"
         };
 
         if( this.$scope.studentForm.$error.length ){
@@ -51,7 +87,7 @@ export default class StudentController{
             this.StudentService.insertStudent(this.form)
                 .then( ( result ) => {
                     alert(result.message);
-                    this.form = {};
+                    this.reset();
                     this.init();
                     return ;
                 });
@@ -74,7 +110,7 @@ export default class StudentController{
             this.StudentService.updateStudent(this.form)
                 .then( ( result ) => {
                     alert(result.message);
-                    this.form = {};
+                    this.reset();
                     this.init();
                     return ;
                 });
@@ -83,11 +119,11 @@ export default class StudentController{
 
     delete(){
 
-        if( confirm(this.selectedStudent.username + "학생계정을 삭제하시겠습니까?") ){
+        if( confirm( `${this.selectedStudent.userName} 학생계정을 삭제하시겠습니까?`) ){
             this.StudentService.deleteStudent(this.form)
                 .then( ( result ) => {
                     alert(result.message);
-                    this.form = {};
+                    this.reset();
                     this.init();
                     return ;
                 });

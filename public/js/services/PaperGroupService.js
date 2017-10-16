@@ -1,13 +1,13 @@
-const BASE_URL = "/admin/student";
+const BASE_URL = "/admin/paperGroup";
 
-export default class StudentService{
+export default class PaperGroupService{
     /** @ngInject */
     constructor( $http, $q ){
         this.$http = $http;
         this.$q    = $q;
     }
 
-    selectStudentList( paramMap ){
+    selectPaperGroupList( paramMap ){
         let defer = this.$q.defer();
         this.$http.get( BASE_URL , paramMap )
             .then( ( response ) => {
@@ -15,12 +15,27 @@ export default class StudentService{
                     defer.resolve( response.data );
                 } else {
                     alert(response.data.message);
+                    defer.reject();
                 }
             });
         return defer.promise;
     }
 
-    insertStudent( paramMap ){
+    selectPaperGroupOne( paramMap ){
+        let defer = this.$q.defer();
+        this.$http.get( BASE_URL + "/" + paramMap.groupId, {} )
+            .then( ( response ) => {
+                if( response.data.code == "success" ){
+                    defer.resolve( response.data );
+                } else {
+                    alert(response.data.message);
+                    defer.reject();
+                }
+            });
+        return defer.promise;
+    }
+
+    insertPaperGroup( paramMap ){
         let defer = this.$q.defer();
 
         this.$http.post( BASE_URL , paramMap )
@@ -29,6 +44,7 @@ export default class StudentService{
                     defer.resolve( response.data );
                 } else {
                     alert(response.data.message);
+                    defer.reject();
                 }
             });
 
@@ -36,30 +52,32 @@ export default class StudentService{
     }
 
 
-    updateStudent( paramMap ){
+    updatePaperGroup( paramMap ){
         let defer = this.$q.defer();
 
-        this.$http.put( BASE_URL + "/" + paramMap.userId , paramMap )
+        this.$http.put( BASE_URL , paramMap )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );
                 } else {
                     alert(response.data.message);
+                    defer.reject();
                 }
             });
 
         return defer.promise;
     }
 
-    deleteStudent( paramMap ){
+    deletePaperGroup( paramMap ){
         let defer = this.$q.defer();
 
-        this.$http.delete( BASE_URL + "/" + paramMap.userId )
+        this.$http.delete( BASE_URL + "/" + paramMap.groupId )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );
                 } else {
                     alert(response.data.message);
+                    defer.reject();
                 }
             });
 
