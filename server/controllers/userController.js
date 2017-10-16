@@ -6,7 +6,11 @@ let UserPaperLog = db.UserPaperLog;
 export default { 
     
     findAllStudent( req, res, next ){
-        User.findAll()
+        User.findAll({
+            where : {
+                role : "student"
+            }
+        })
             .then( studentList => {
                 res.send({
                     code : "success",
@@ -74,7 +78,8 @@ export default {
         User.create(req.body)
             .then( studnet => {
                 res.send({
-                    code : "success"
+                    code : "success",
+                    message : "학생이 등록되었습니다."
                 });
             });
     },
@@ -87,6 +92,7 @@ export default {
         }).then( ( count, row ) => {
             res.send({
                 code : "success",
+                message : "학생정보가 수정되었습니다." //TODO : pretty
             });
         });
     },
@@ -98,7 +104,8 @@ export default {
             }
         }).then( count => {
             res.send({
-                code : "success"
+                code : "success",
+                message : "학생정보가 삭제되었습니다."
             });
         });
     }
