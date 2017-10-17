@@ -1,4 +1,4 @@
-const BASE_URL = "/paper";
+const BASE_URL = "/admin/paper";
 
 export default class PaperService{
     /** @ngInject */
@@ -9,7 +9,7 @@ export default class PaperService{
 
     selectPaperList( paramMap ){
         let defer = this.$q.defer();
-        this.$http.get( BASE_URL , paramMap )
+        this.$http.get( BASE_URL + "/" + paramMap.groupId , paramMap )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );
@@ -23,7 +23,7 @@ export default class PaperService{
 
     selectPaperOne( paramMap ){
         let defer = this.$q.defer();
-        this.$http.get( BASE_URL + "/" + paramMap._id, {} )
+        this.$http.get( BASE_URL + "/" + paramMap.groupId + "/" + paramMap.paperId, {} )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );
@@ -55,7 +55,7 @@ export default class PaperService{
     updatePaper( paramMap ){
         let defer = this.$q.defer();
 
-        this.$http.put( BASE_URL , paramMap )
+        this.$http.put( BASE_URL + "/" + paramMap.paperId , paramMap )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );
@@ -71,7 +71,7 @@ export default class PaperService{
     deletePaper( paramMap ){
         let defer = this.$q.defer();
 
-        this.$http.delete( BASE_URL + "/" + paramMap._id )
+        this.$http.delete( BASE_URL + "/" + paramMap.paperId )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );

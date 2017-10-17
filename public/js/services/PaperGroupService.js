@@ -55,7 +55,7 @@ export default class PaperGroupService{
     updatePaperGroup( paramMap ){
         let defer = this.$q.defer();
 
-        this.$http.put( BASE_URL , paramMap )
+        this.$http.put( BASE_URL + "/" + paramMap.originalGroupId , paramMap )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );
