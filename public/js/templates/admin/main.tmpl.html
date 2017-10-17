@@ -8,13 +8,19 @@
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dashboard">
                         <a class="nav-link" ui-sref="admin.student" ui-sref-active="active">
-                            <i class="fa fa-fw fa-dashboard"></i>
+                            <i class="fa fa-fw fa-users"></i>
                             <span class="nav-link-text">학생관리</span>
                             </a>
                     </li>
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="" data-original-title="Charts">
+                        <a class="nav-link" ui-sref="admin.paperGroup" ui-sref-active="active">
+                            <i class="fa fa-sitemap"></i>
+                            <span class="nav-link-text">학습지그룹관리</span>
+                            </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="" data-original-title="Charts">
                         <a class="nav-link" ui-sref="admin.paper" ui-sref-active="active">
-                            <i class="fa fa-fw fa-area-chart"></i>
+                            <i class="fa fa-fw fa-suitcase"></i>
                             <span class="nav-link-text">학습지관리</span>
                             </a>
                     </li>
@@ -29,7 +35,7 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-                            <i class="fa fa-fw fa-sign-out"></i>Logout</a>
+                            <i class="fa fa-fw fa-sign-out"></i>로그아웃</a>
                     </li>
                 </ul>
             </div>
@@ -123,12 +129,12 @@
     <div class="lg-gap"></div>
 </script>
 
-<script type="text/ng-template" id="paperAdminTemplate">
+<script type="text/ng-template" id="paperGroupTemplate">
 <div class="card">
     <div class="card-header">
         <h2>
-            <i class="fa fa-briefcase"></i>
-            <span>학습지 그룹</span>
+            <i class="fa fa-sitemap"></i>
+            <span>학습지 그룹 목록</span>
         </h2>
     </div>
     <div class="card-body">
@@ -151,7 +157,7 @@
 <div class="card">
     <div class="card-header">
         <h2>
-            <i class="fa fa-briefcase"></i>
+            <i class="fa fa-sitemap"></i>
             <span>학습지 그룹 등록</span>
         </h2>
     </div>
@@ -163,8 +169,8 @@
                     <input type="groupId" class="form-control" name="groupId" placeholder="그룹명을 입력해주세요" ng-model="content.form.groupId" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="groupTitle">그룹타이틀</label>
-                    <input type="groupTitle" class="form-control" name="groupTitle" placeholder="그룹타이틀을 한번 더 입력해주세요" ng-model="content.form.groupTitle" required>
+                    <label for="groupTitle">그룹제목</label>
+                    <input type="groupTitle" class="form-control" name="groupTitle" placeholder="그룹제목을 입력해주세요" ng-model="content.form.groupTitle" required>
                 </div>
             </div>
         </form>  
@@ -180,3 +186,99 @@
 </div>
 
 </script>
+
+<script type="text/ng-template" id="paperTemplate">
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fa fa-suitcase"></i>
+                <span>학습지 목록</span>
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row" style="margin:0">
+                <div class="col-md-3">
+                    <label for="">학습지그룹</label>
+                    <select ng-model="content.searchGroupId" class="form-control" ng-change="content.init();">
+                        <option value="{{row.groupId}}" ng-repeat="row in content.paperGroups">{{row.groupId}}({{row.groupTitle}})</option>
+                    </select>
+                </div>
+                <div class="col-md-9">
+                    <div class="md-gap"></div>
+                    <div class="search-box">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-lg" placeholder="학습지를 검색해보세요" ng-model="content.searchQuery" ng-enter="content.filter()"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-info btn-lg" type="button" ng-click="content.filter()">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="md-gap"></div>
+            <div class="grid" ui-grid="content.gridOptions" ui-grid-selection></div>
+            <div class="md-gap"></div> 
+        </div>
+    </div>
+    <div class="md-gap"></div>
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fa fa-suitcase"></i>
+                <span>학습지 등록</span>
+            </h2>
+        </div>
+        <div class="card-body">
+            <form name="paperForm" novalidate>
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="paperTitle">학습지제목</label>
+                        <input type="text" class="form-control" name="paperTitle" placeholder="학습지제목을 입력해주세요" ng-model="content.form.paperTitle" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="step">단계</label>
+                        <input type="text" class="form-control" name="step" placeholder="단계를 입력해주세요" ng-model="content.form.step" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="description">설명</label>
+                        <input type="text" class="form-control" name="description" placeholder="설명을 입력해주세요" ng-model="content.form.description" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="">연산형식</label>
+                        <select ng-model="content.form.operationType" ng-init="content.form.operationType='calculation'" class="form-control">
+                            <option value="calculation">사칙연산</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="displayType">문제형식</label>
+                        <select ng-model="content.form.displayType" ng-init="content.form.displayType='horizontal'" class="form-control">
+                            <option value="horizontal">가로형</option>
+                            <option value="vertical">세로형</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label for="">문제(enter 키를 이용해서 등록해주세요)</label>
+                        <textarea name="question" id="question" ng-model="content.form.question" placeholder="학습지 문제를 등록해주세요" class="form-control" required></textarea>
+                    </div>
+                </div>
+            </form>  
+        </div>
+        <div class="card-footer">
+            <p class="text-right">
+                <button ng-click="content.submit();" class="btn btn-primary" ng-show="content.selectedPaper == null">저장하기</button>
+                <button ng-click="content.reset();" class="btn btn-primary" ng-show="content.selectedPaper != null">등록하기</button>
+                <button ng-click="content.modify();" class="btn btn-success" ng-show="content.selectedPaper != null">수정하기</button>
+                <button ng-click="content.delete();" class="btn btn-danger" ng-show="content.selectedPaper != null">삭제하기</button>
+            </p>
+        </div>
+    </div>
+    <div class="md-gap"></div>
+    </script>

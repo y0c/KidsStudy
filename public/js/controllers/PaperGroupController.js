@@ -1,9 +1,10 @@
 export default class PaperGroupController{
     /** @ngInject */
-    constructor($scope, PaperGroupService){
+    constructor($scope, PaperGroupService, $filter){
         this.$scope            = $scope;
         this.PaperGroupService = PaperGroupService;
-        this.selectPaper       = null;
+        this.selectPaperGroup  = null;
+        this.$filter           = $filter;
         this.setGridOptions();
         this.init();
     }
@@ -13,13 +14,13 @@ export default class PaperGroupController{
         this.form               = {};
         this.PaperGroupService.selectPaperGroupList({})
             .then(( result ) => {
-                this.papers = result.paperGroupList;
-                this.gridOptions.data = this.papers;
-                console.log(result);
+                this.paperGroups = result.paperGroupList;
+                this.gridOptions.data = this.paperGroups;
             });
     }
 
     setGridOptions(){
+        let vm = this;
         this.gridOptions = {
             enableSorting : true,
             enableRowSelection: true,
@@ -35,9 +36,9 @@ export default class PaperGroupController{
             appScopeProvider : this,
             onRegisterApi : gridApi => {
                 this.gridApi = gridApi;
-                // this.gridApi.selection.on.rowSelectionChanged(vm.$scope,function(row){
-                    // this.grid.appScope.select(row.entity);                     
-                // });
+                this.gridApi.selection.on.rowSelectionChanged(vm.$scope,function(row){
+                    this.grid.appScope.select(row.entity);                     
+                });
             }
         };
     }
@@ -45,8 +46,13 @@ export default class PaperGroupController{
 
     reset(){
         this.form = {};
-        this.selectedPaper = null;
+        this.selectedPaperGroup = null;
     }
+
+    filter(){
+        this.gridOptions.data = this.$filter('filter')( this.paperGroups, this.searchQuery);
+    }
+
 
     validate(){
         let messageMap = {
@@ -80,25 +86,21 @@ export default class PaperGroupController{
     }
 
 
-    select( paper ){
-        this.selectedPaper = paper;
+    select( paperGroup ){
+        this.selectedPaperGroup = paperGroup;
         this.form = {};
-        angular.copy( this.selectedPaper, this.form );
-        if( this.form.questions.length ){
-            this.form.question = this.form.questions.join("\n");
-        }
+        angular.copy( this.selectedPaperGroup, this.form );
     }
 
     modify(){
         if( !this.validate() ) return false;
 
-        this.form.questions = this.form.question.split("\n");
-
-        if( confirm("정보를 수정하시겠습니까?") ){
-            this.PaperGroupService.updatePaper(this.form)
+        if( confirm("학습지그룹을 수정하시겠습니까?") ){
+            this.form.originalGroupId = this.selectedPaperGroup.groupId;
+            this.PaperGroupService.updatePaperGroup(this.form)
                 .then( ( result ) => {
                     alert(result.message);
-                    this.form = {};
+                    this.reset();
                     this.init();
                     return ;
                 });
@@ -107,11 +109,12 @@ export default class PaperGroupController{
 
     delete(){
 
-        if( confirm(this.selectedPaper.title + "학습지를 삭제하시겠습니까?") ){
-            this.PaperGroupService.deletePaper(this.form)
+        if( confirm(this.selectedPaperGroup.groupId + "그룹을 삭제하시겠습니까?") ){
+            this.form.originalGroupId = this.selectedPaperGroup.groupId;
+            this.PaperGroupService.deletePaperGroup(this.form)
                 .then( ( result ) => {
                     alert(result.message);
-                    this.form = {};
+                    this.reset();
                     this.init();
                     return ;
                 });
