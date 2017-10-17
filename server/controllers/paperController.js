@@ -54,7 +54,8 @@ export default {
                 });
         }).then( () => {
             res.send({
-                code : "success"
+                code : "success",
+                message : "학습지가 저장되었습니다."
             });
         });
         
