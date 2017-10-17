@@ -14,6 +14,7 @@ import PaperService from "./services/PaperService";
 import PaperGroupService from "./services/PaperGroupService";
 import AuthService from "./services/AuthService";
 import PaperGroupController from "./controllers/PaperGroupController";
+import PaperController      from "./controllers/PaperController";
 
 import commonDirectives from "./directives/commonDirectives";
 
@@ -52,13 +53,23 @@ app.config(
             }
             
         })
-        .state("admin.paper",{
-            url: '/paper',
+        .state("admin.paperGroup",{
+            url: '/paperGroup',
             views : {
                 content : {
                     controller : "PaperGroupController",
                     controllerAs : "content",
-                    templateUrl : "paperAdminTemplate"
+                    templateUrl : "paperGroupTemplate"
+                }
+            }
+        })
+        .state("admin.paper",{
+            url: '/paper',
+            views : {
+                content : {
+                    controller : "PaperController",
+                    controllerAs : "content",
+                    templateUrl : "paperTemplate"
                 }
             }
         });
@@ -74,6 +85,7 @@ app.service("StudentService", StudentService)
     .service("PaperGroupService", PaperGroupService)
     .controller("StudentController", StudentController)
     .controller("PaperGroupController", PaperGroupController)
+    .controller("PaperController", PaperController)
     .controller("LoginController", LoginController)
     .controller("AdminMainController", AdminMainController);
 
