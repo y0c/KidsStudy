@@ -55,11 +55,21 @@ export default ( sequelize, DataTypes ) => {
             type : DataTypes.TEXT,
             allowNull : true,
             field : "etc"
+        },
+        createdAt : {
+            type : DataTypes.DATE,
+            field : "created_at"
+        },
+        updatedAt : {
+            type : DataTypes.DATE,
+            field : "updated_at"
         }
     },{
         tableName : "PAPER",
         freezeTableName: true,
-        underscored : true
+        underscored : true,
+        updatedAt: "updatedAt",
+        createdAt: "createdAt"
     });
 
     /**

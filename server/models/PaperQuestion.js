@@ -22,11 +22,21 @@ export default ( sequelize, DataTypes ) => {
             type : DataTypes.STRING(300),
             allowNull : false,
             field : "question"
+        },
+        createdAt : {
+            type : DataTypes.DATE,
+            field : "created_at"
+        },
+        updatedAt : {
+            type : DataTypes.DATE,
+            field : "updated_at"
         }
     },{
         tableName : "PAPER_QUESTION",
         freezeTableName: true,
-        underscored : true
+        underscored : true,
+        updatedAt: "updatedAt",
+        createdAt: "createdAt"
     });
 
     /**
