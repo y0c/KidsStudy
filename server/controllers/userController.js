@@ -25,6 +25,7 @@ export default {
                 userId : req.params.userId
             }
         }).then( student => {
+            console.log(student.get("userId"));
             db.sequelize.query(
                     `SELECT A.GROUP_ID as groupId,
                             A.GROUP_TITLE as groupTitle,
@@ -37,7 +38,7 @@ export default {
                                 FROM PAPER B LEFT JOIN 
                                             ( 
                                                 SELECT USER_ID,
-                                                    PAPER_ID
+                                                      PAPER_ID
                                                 FROM USER_PAPER_LOG
                                                 WHERE USER_ID  = $userId
                                                 GROUP BY USER_ID, PAPER_ID 
@@ -47,7 +48,7 @@ export default {
                             ) AS studyPercent
                     FROM PAPER_GROUP A`
                 ,{ 
-                    bind : { userId : req.params.userId },
+                    bind : { userId : student.get("userId") },
                     type : db.sequelize.QueryTypes.SELECT 
                 }
             ).then( paperGroupList => {

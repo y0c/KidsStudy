@@ -14,7 +14,7 @@ export default class LoginController{
                 this.$rootScope.loginInfo = user;
                 let stateMap = {
                     admin : "admin.student",
-                    student : "student.main"
+                    student : "student"
                 };
                 
                 this.$state.go(stateMap[user.role]);

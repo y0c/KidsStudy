@@ -9,7 +9,20 @@ export default class StudentService{
 
     selectStudentList( paramMap ){
         let defer = this.$q.defer();
-        this.$http.get( BASE_URL , paramMap )
+        this.$http.get( BASE_URL , {} )
+            .then( ( response ) => {
+                if( response.data.code == "success" ){
+                    defer.resolve( response.data );
+                } else {
+                    alert(response.data.message);
+                }
+            });
+        return defer.promise;
+    }
+
+    selectStudentOne( paramMap ){
+        let defer = this.$q.defer();
+        this.$http.get( BASE_URL + "/" + paramMap.userId, {} )
             .then( ( response ) => {
                 if( response.data.code == "success" ){
                     defer.resolve( response.data );

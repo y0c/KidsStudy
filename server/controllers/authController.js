@@ -5,8 +5,11 @@ const User = db.User;
 
 export default {
     login( req, res, next ){
-        User.findOne({ userId : req.body.userId })
-            .then( user => {
+        User.findOne({
+            where : {
+                userId : req.body.userId
+            }
+        }).then( user => {
                 if( !user ){
                     res.send({
                         code : "success",

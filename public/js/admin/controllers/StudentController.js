@@ -97,10 +97,15 @@ export default class StudentController{
 
 
     select( student ){
-        this.selectedStudent = student;
-        this.form = {};
-        angular.copy( this.selectedStudent, this.form );
-        this.form.passwordConfirm = this.form.password;
+        this.StudentService.selectStudentOne({
+            userId : student.userId
+        }).then( result => {
+            this.selectedStudent = result.student;
+            this.paperGroupList = result.paperGroupList;
+            this.form = {};
+            angular.copy( this.selectedStudent, this.form );
+            this.form.passwordConfirm = this.form.password;
+        });
     }
 
     modify(){

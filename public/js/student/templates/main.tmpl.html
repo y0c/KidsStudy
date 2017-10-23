@@ -1,0 +1,29 @@
+<script type="text/ng-template" id="studentMainTemplate">
+    <div class="lg-gap"></div>
+    <div class="container">
+        <h1 class="page-header logo">
+            <i class="material-icons md-36">face</i>
+            KidsStudy
+        </h1>
+
+        <div class="card-header">
+            <h2>
+                <i class="fa fa-chart"></i>
+                <span>{{ main.currentStudent.userName }} 학생의 학습현황</span>
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="study-box" ng-repeat="row in main.paperGroupList">
+                <div class="study-box-header">
+                    {{row.groupId}} ( {{row.groupTitle }} )       
+                </div>
+                <div class="study-box-body">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width:{{row.studyPercent}}%;height: 20px;" aria-valuenow="{{row.studyPercent}}" aria-valuemin="0" aria-valuemax="100">{{row.studyPercent}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lg-gap"></div>
+</script>

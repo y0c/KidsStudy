@@ -13,7 +13,6 @@ const extractSass = new ExtractTextPlugin({
 module.exports = {
     entry: {
         app :  './public/js/app.js',
-        student : "./public/js/student.js",
         vendor : [ 'angular', 'angular-ui-router', 'angular-ui-bootstrap', "angular-ui-grid",  "lodash"]
     },
     output: {
@@ -61,9 +60,7 @@ module.exports = {
         ]
     },
     plugins : [
-        new UglifyJSPlugin({
-            sourceMap : true
-        }),
+        new UglifyJSPlugin(),
         extractSass,
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',

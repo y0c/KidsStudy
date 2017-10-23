@@ -1,22 +1,24 @@
 import "../css/bootstrap.min.css";
 import "../scss/common.scss";
 import "../scss/admin.scss";
+import "../scss/student.scss";
 import "angular-ui-grid/ui-grid.min.css";
 import 'font-awesome/scss/font-awesome.scss';
-import "./templates/admin/main.tmpl.html";
-import "./templates/admin/login.tmpl.html";
+import "./admin/templates/main.tmpl.html";
+import "./common/templates/login.tmpl.html";
+import "./student/templates/main.tmpl.html";
 
-import StudentService from "./services/StudentService";
-import StudentController from "./controllers/StudentController";
-import LoginController from "./controllers/LoginController";
-import AdminMainController from "./controllers/AdminMainController";
-import PaperService from "./services/PaperService";
-import PaperGroupService from "./services/PaperGroupService";
-import AuthService from "./services/AuthService";
-import PaperGroupController from "./controllers/PaperGroupController";
-import PaperController      from "./controllers/PaperController";
+import StudentService from "./admin/services/StudentService";
+import StudentController from "./admin/controllers/StudentController";
+import LoginController from "./common/controllers/LoginController";
+import AdminMainController from "./admin/controllers/AdminMainController";
+import PaperService from "./admin/services/PaperService";
+import PaperGroupService from "./admin/services/PaperGroupService";
+import AuthService from "./common/services/AuthService";
+import PaperGroupController from "./admin/controllers/PaperGroupController";
+import PaperController      from "./admin/controllers/PaperController";
 
-import commonDirectives from "./directives/commonDirectives";
+import commonDirectives from "./common/directives/commonDirectives";
 
 let app = angular.module("kidsStudy", [ 'ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.selection' ]);
 
@@ -41,6 +43,13 @@ app.config(
             controller : "AdminMainController",
             controllerAs : "main",
             templateUrl : "mainTemplate"
+        })
+        .state({
+            name : "student",
+            url : "/student",
+            controller : "StudentMainController",
+            controllerAs : "main",
+            templateUrl : "studentMainTemplate"
         })
         .state("admin.student", {
             url : "/student",

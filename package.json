@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "web": "NODE_ENV=development node build/web",
+    "web": "NODE_ENV=development node --inspect build/web.js",
     "start": "NODE_ENV=development electron main.js",
-    "serverbuild": "babel --watch server --out-dir=build",
+    "serverbuild": "babel --watch server --out-dir=build --source-maps inline",
     "clientbuild": "webpack --watch",
     "test": "NODE_ENV=test node ./node_modules/mocha/bin/mocha ./build/test/**/*.spec.js"
   },
