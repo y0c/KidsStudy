@@ -1,12 +1,11 @@
 import express from "express";
-import userController from "../controllers/userController";
-
+import userController  from "../../controllers/userController";
+import paperGroupController from "../../controllers/paperGroupController";
 let router = express.Router();
 
-export default ( db ) => {
     
-    router.get("/:userId", userController.findOneStudent );
+router.get("/me", userController.findOneStudent );
 
+router.get("/paperGroup/:groupId", paperGroupController.findOnePaperGroup );
 
-    return router;
-}
+export default router;
