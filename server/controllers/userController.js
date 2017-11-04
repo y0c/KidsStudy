@@ -22,7 +22,7 @@ export default {
     findOneStudent( req, res, next ){
         User.findOne({
             where : {
-                userId : req.params.userId
+                userId : req.params.userId || req.session.user.userId
             }
         }).then( student => {
             console.log(student.get("userId"));

@@ -20,8 +20,10 @@ export default {
                 groupId : req.params.groupId
             }
         }).then( paperGroup => {
+            let paperList = paperGroup.getPapers();
             res.send({
                     code : "success",
+                    paperList,
                     paperGroup
                 });
         });

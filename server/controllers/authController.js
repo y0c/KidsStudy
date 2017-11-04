@@ -35,7 +35,7 @@ export default {
     },
 
     auth( req, res, next ) {
-        let uesrInfo = req.session.user;
+        let userInfo = req.session.user;
         if( !userInfo ){
             res.status(401).send({
                 code : "fail",

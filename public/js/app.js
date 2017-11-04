@@ -18,6 +18,10 @@ import AuthService from "./common/services/AuthService";
 import PaperGroupController from "./admin/controllers/PaperGroupController";
 import PaperController      from "./admin/controllers/PaperController";
 
+import StudentPaperGroupController from "././student/controllers/StudentPaperGroupController";
+import StudentMainController from "./student/controllers/StudentMainController";
+import StudentMainService    from "./student/services/StudentMainService";
+
 import commonDirectives from "./common/directives/commonDirectives";
 
 let app = angular.module("kidsStudy", [ 'ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.selection' ]);
@@ -27,6 +31,19 @@ app.config(
     ($stateProvider, $urlRouterProvider, $qProvider) => {
     
     $qProvider.errorOnUnhandledRejections(false);
+
+    let auth = {
+        /** @ngInject */
+        auth : ( AuthService, $state ) => {
+            return AuthService.check()
+                .then( () => {}
+                , () => {
+                    alert("로그인 후 이용하실수 있습니다.");
+                    $state.go("login");
+                });
+
+        }
+    };
 
     $stateProvider
         
@@ -42,14 +59,26 @@ app.config(
             url : "/admin",
             controller : "AdminMainController",
             controllerAs : "main",
-            templateUrl : "mainTemplate"
+            templateUrl : "mainTemplate",
+            resolve : auth
         })
         .state({
             name : "student",
             url : "/student",
             controller : "StudentMainController",
             controllerAs : "main",
-            templateUrl : "studentMainTemplate"
+            templateUrl : "studentMainTemplate",
+            resolve : auth
+        })
+        .state("student.paperGroup",{
+            url : "/paperGroup/:groupId",
+            views : {
+                content : {
+                    controller : "StudentPaperGroupController",
+                    controllerAs : "content",
+                    templateUrl : "studentPaperListTemplate"
+                }
+            }
         })
         .state("admin.student", {
             url : "/student",
@@ -59,7 +88,8 @@ app.config(
                     controllerAs : "content",
                     templateUrl : "studentAdminTemplate"
                 }
-            }
+            },
+            resolve : auth
             
         })
         .state("admin.paperGroup",{
@@ -70,7 +100,8 @@ app.config(
                     controllerAs : "content",
                     templateUrl : "paperGroupTemplate"
                 }
-            }
+            },
+            resolve : auth
         })
         .state("admin.paper",{
             url: '/paper',
@@ -80,7 +111,8 @@ app.config(
                     controllerAs : "content",
                     templateUrl : "paperTemplate"
                 }
-            }
+            },
+            resolve : auth
         });
     
     $urlRouterProvider.otherwise("/login");
@@ -92,11 +124,14 @@ app.service("StudentService", StudentService)
     .service("AuthService", AuthService)
     .service("PaperService", PaperService)
     .service("PaperGroupService", PaperGroupService)
+    .service("StudentMainService", StudentMainService )
     .controller("StudentController", StudentController)
     .controller("PaperGroupController", PaperGroupController)
     .controller("PaperController", PaperController)
     .controller("LoginController", LoginController)
-    .controller("AdminMainController", AdminMainController);
+    .controller("AdminMainController", AdminMainController)
+    .controller("StudentMainController", StudentMainController)
+    .controller("StudentPaperGroupController", StudentPaperGroupController) ;
 
 
     commonDirectives(app);

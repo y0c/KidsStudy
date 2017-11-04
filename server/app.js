@@ -12,6 +12,7 @@ import paperRouter from "./routes/admin/paperRouter";
 import studentRouter from "./routes/admin/studentRouter"
 import authRouter from "./routes/authRouter";
 import indexRouter from "./routes/indexRouter";
+import studentMainRouter from "./routes/student/mainRouter";
 import session from 'express-session';
 
 import db from "./models/index";
@@ -46,9 +47,9 @@ function isAuthendicated( req, res, next ){
     }
 }
 
-// app.use('/', studentIndex(db) );
+app.use('/', indexRouter );
 app.use("/auth", authRouter);
-app.use('/', indexRouter);
+app.use('/student', studentMainRouter);
 app.use('/admin/paperGroup', paperGroupRouter );
 app.use('/admin/paper' , paperRouter );
 app.use('/admin/student', studentRouter);

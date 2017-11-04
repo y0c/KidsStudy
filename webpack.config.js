@@ -60,7 +60,9 @@ module.exports = {
         ]
     },
     plugins : [
-        new UglifyJSPlugin(),
+        new UglifyJSPlugin({
+            sourceMap:true
+        }),
         extractSass,
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',

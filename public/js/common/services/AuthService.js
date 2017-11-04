@@ -29,7 +29,7 @@ export default class AuthService{
         this.$http.post( this.BASE_URL, {} )
             .then( (response) => {
                 if( response.data.code == "success" ){
-                    this.$rootScope.loginInfo = response.data.user;
+                    this.$rootScope.loginInfo = response.data.userInfo;
                     defer.resolve();
                 }
             },( response ) => {
